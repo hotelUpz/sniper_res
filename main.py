@@ -141,8 +141,8 @@ class MAIN_LOGIC(BitgetParser):
                     print("Время поработать!")
 
                 # //////////////// 
-                # parse_data = self.bitget_parser()
-                # print(parse_data)
+                parse_data = self.bitget_parser()
+                print(parse_data)
                 # if not parse_data:
                 #     print("Парсер данные пусты.")
                 #     time.sleep(1800)
