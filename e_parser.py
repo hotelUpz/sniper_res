@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-from joblib import Parallel, delayed
+import time 
+import random
+# from joblib import Parallel, delayed
 from random import choice
 from d_utils import ProcessUtils
 
@@ -34,18 +36,30 @@ class BitgetParser(ProcessUtils):
         super().__init__()
         self.bitget_parser_session = requests.Session()
 
-    def links_multiprocessor(self, data, cur_time, cpu_count=1): 
+    # def links_multiprocessor(self, data, cur_time, cpu_count=1): 
+    #     total_list = []
+    #     try:
+    #         res = Parallel(n_jobs=cpu_count, prefer="threads")(delayed(lambda item: self.bitget_links_handler(item, cur_time))(item) for item in data)
+    #         for x in res: 
+    #             if x:               
+    #                 try:                    
+    #                     total_list.append(x)
+    #                 except:
+    #                     pass 
+    #     except:
+    #         pass
+    #     return total_list
+
+    def links_multiprocessor(self, data, cur_time): 
         total_list = []
-        try:
-            res = Parallel(n_jobs=cpu_count, prefer="threads")(delayed(lambda item: self.bitget_links_handler(item, cur_time))(item) for item in data)
-            for x in res: 
-                if x:               
-                    try:                    
-                        total_list.append(x)
-                    except:
-                        pass 
-        except:
-            pass
+
+        for item in data:
+                try:                    
+                    total_list.append(self.bitget_links_handler(item, cur_time))                    
+                except:
+                    pass 
+                time.sleep(random.uniform(0.1, 0.5))  
+
         return total_list
 
     def bitget_links_handler(self, data_item, cur_time):
@@ -102,4 +116,4 @@ class BitgetParser(ProcessUtils):
             print(f"Error in file parser.py str ~ 100: {ex}")            
             return {}
     
-print(BitgetParser().bitget_parser())
+# print(BitgetParser().bitget_parser())

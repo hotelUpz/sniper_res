@@ -3,7 +3,7 @@ import pytz
 class Settings():
     test = True
     config = {
-        "network_delay_ms": -160,
+        "network_delay_ms": -100,
         "buy_size": 2.0, # usdt
         "sell_params": {
             1: {

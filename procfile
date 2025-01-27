@@ -1,1 +1,1 @@
-worker: python e_parser.py
+worker: python main.py
