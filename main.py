@@ -33,7 +33,6 @@ def get_test_utc_time(minute_num):
     return utc_milliseconds
         
 class MAIN_LOGIC(BitgetParser):
-
     def trading_logic_template(self, symbol, listing_ms_time):
         order_resp_list = []
         inaccuracy_ms = 100
@@ -122,56 +121,70 @@ class MAIN_LOGIC(BitgetParser):
         self.result_logger(order_resp_list, symbol)
         
         return True
-    
-    def trading_monitpring(self):
-        first_iter = True 
-        parse_data = {}
+
+    def trading_monitoring(self):
+        first_iter = True
 
         if self.is_bible_quotes:
-            print(gen_bible_quote()) 
+            print(gen_bible_quote())
 
         while True:
             try:
+                # Проверяем, нужно ли спать
                 time_diff_seconds = self.work_sleep_manager()
                 if time_diff_seconds:
-                    print("Время спать!")
+                    print(f"Время спать {time_diff_seconds} секунд...")
                     time.sleep(time_diff_seconds)
-                elif first_iter:
+                    continue
+                
+                if first_iter:
                     first_iter = False
                     print("Время поработать!")
 
-                # //////////////// 
+                # --- Парсинг данных ---
                 parse_data = self.bitget_parser()
-                print(parse_data)
-                # if not parse_data:
-                #     print("Парсер данные пусты.")
-                #     time.sleep(1800)
-                #     continue
-                symbol = parse_data.get('symbol', 'NOTUSDT')
-                listing_time_ms = parse_data.get('listing_time_ms', get_test_utc_time(2))
-                print(f'Найдена монета: {symbol}')
-                print(f'Время листинга: {self.milliseconds_to_datetime(listing_time_ms)}')
-                print()
-                # return
+                if not parse_data:
+                    print("Не найдено ни одной монеты. Ждём 30 минут...")
+                    time.sleep(1800)
+                    continue
+
+                symbol = parse_data.get('symbol')
+                listing_time_ms = parse_data.get('listing_time_ms')
+
+                # Проверяем, не слишком ли рано
+                remaining_time = listing_time_ms - self.get_current_ms_utc_time()
+                if remaining_time >= 3_600_000:
+                    print(f"Монета {symbol} найдена, но еще не вечер... Ждём 30 минут.")
+                    time.sleep(1800)
+                    continue
+
+                print(f"🎯 Найдена монета: {symbol}")
+                print(f"🕒 Время листинга: {self.milliseconds_to_datetime(listing_time_ms)}")
+
+                # Запускаем торговую логику
                 if not self.trading_logic_template(symbol, listing_time_ms):
-                    print("*** Raport: ***")
+                    print("*** Ошибки при торговле: ***")
                     print(self.log_info_list)
-                    print(self.general_error_logger_list)                        
-                    return False            
-            except:
-                pass
-            print("*** Raport: ***")
+                    print(self.general_error_logger_list)
+                    return False
+                
+            except Exception as e:
+                print(f"❌ Ошибка в цикле: {e}")
+
+            # Логируем в конце итерации
+            print("*** Отчёт ***")
             print(self.log_info_list)
             print(self.general_error_logger_list)
+
+            # Засыпаем перед следующей итерацией
             time.sleep(60)
-            break
         
 def main():
     main_logic_instanse = MAIN_LOGIC()
     # intro_answer = input('Начинаем? (y/n)').strip()
     # print()
     # if intro_answer == "y":     
-    if not main_logic_instanse.trading_monitpring():
+    if not main_logic_instanse.trading_monitoring():
         print("Ошибка в работе бота.")
     input('Завершить работу? (Enter)')
     print("Работа программы завершена")

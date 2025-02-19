@@ -60,7 +60,7 @@ class TimeUtils(ParserUtils):
     def get_current_ms_utc_time(self):
         return int(time.time() * 1000)
 
-    def get_start_of_day(self, days=1):
+    def get_start_of_day(self, days=5):
         now = datetime.now()
         start_of_day = datetime(now.year, now.month, now.day) - timedelta(days=days)
         return int(start_of_day.timestamp() * 1000)

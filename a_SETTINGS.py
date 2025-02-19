@@ -1,13 +1,13 @@
 import pytz
 
 class Settings():
-    test = True
+    test = False
     config = {
         "network_delay_ms": -100,
-        "buy_size": 2.0, # usdt
+        "buy_size": 5.0, # usdt
         "sell_params": {
             1: {
-                "delay_ms": 300, # seconds
+                "delay_ms": 500, # mili_seconds
                 "share_%": 100
             }
         },

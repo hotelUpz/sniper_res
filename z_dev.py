@@ -26,7 +26,6 @@
 # print(int(time.time()* 1000))
 
 
-
     # def get_current_ms_utc_time(self):
     #     return int(datetime.now(tz=timezone.utc).timestamp() * 1000)
 
@@ -51,12 +50,29 @@
     #     start_of_day = datetime(now.year, now.month, now.day) - timedelta(days=days)
     #     return int(start_of_day.timestamp() * 1000)
 
-sell_params = {
-            1: {
-                "delay_sec": 0.5, # seconds
-                "share_%": 100
-            }
-        }
+# sell_params = {
+#             1: {
+#                 "delay_sec": 0.5, # seconds
+#                 "share_%": 100
+#             }
+#         }
 
-for _, val in sell_params.items():
-    print(val.get("share_%"))
+# for _, val in sell_params.items():
+#     print(val.get("share_%"))
+
+
+# from joblib import Parallel, delayed
+
+# def links_multiprocessor(self, data, cur_time, cpu_count=1): 
+#     total_list = []
+#     try:
+#         res = Parallel(n_jobs=cpu_count, prefer="threads")(delayed(lambda item: self.bitget_links_handler(item, cur_time))(item) for item in data)
+#         for x in res: 
+#             if x:               
+#                 try:                    
+#                     total_list.append(x)
+#                 except:
+#                     pass 
+#     except:
+#         pass
+#     return total_list
