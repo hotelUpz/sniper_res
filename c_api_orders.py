@@ -6,7 +6,6 @@ import base64
 from hashlib import sha256
 from urllib.parse import urlencode
 from b_log import Total_Logger
-from b_log import Total_Logger
 import inspect
 
 # Класс для работы с API биржи Bitget
